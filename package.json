@@ -4,7 +4,8 @@
   "description": "Tweet sentiment analyzer",
   "main": "app.js",
   "scripts": {
-      "start": "nodemon --ext js app.js"
+      "start": "node app.js",
+      "dev": "nodemon --ext js app.js"
   },
   "repository": "https://github.com/youssefsoli/twittersafe.space.git",
   "author": "youssefsoli <youssefdevelops@gmail.com>",
