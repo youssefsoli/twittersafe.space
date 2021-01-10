@@ -88,9 +88,22 @@ router.get('/:id', (req, res) => {
                         0
                     ) / calculatedTweets.length;
                 res.send({ calculatedTweets, averageScore });
+            }).catch(err => {
+                console.log(err);
+                res.status(500);
+                res.send({err: 'Invalid language'});
             });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.log(err);
+            res.status(500);
+            res.send({err: 'Invalid username'});
+        });
 });
+
+router.get('/', (req, res) => {
+    res.status(500);
+    res.send({err: 'Empty username'});
+})
 
 module.exports = router;

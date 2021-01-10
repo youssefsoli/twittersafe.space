@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { Tweet } from 'react-twitter-widgets';
 import Lottie from 'react-lottie';
 import animationData from './lotties/loading.json';
+import Graph from './components/Graph';
 
 const getTweets = async (username) => {
     return fetch(`http://localhost:3000/api/tweets/${username}`)
@@ -23,9 +24,10 @@ const getTweets = async (username) => {
 
 function App() {
     const [username, setUsername] = useState('');
-    const [tweetData, setTweetData] = useState([]);
+    const [tweetData, setTweetData] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [tweetID, setTweetID] = useState(false);
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -56,9 +58,9 @@ function App() {
                                     setError(false);
                                 } catch(e) {
                                     setError(e);
-                                    setLoading(false);
                                 }
-                                setTweetData(tweetData || {});
+                                setLoading(false);
+                                setTweetData(tweetData || false);
                                 ev.preventDefault();
                             }
                           }}
@@ -74,6 +76,7 @@ function App() {
                         }}
                     />
                 </div>
+                <div>
                 <Button
                     variant="contained"
                     onClick={async () => {
@@ -84,13 +87,14 @@ function App() {
                             setError(false);
                         } catch(e) {
                             setError(e);
-                            setLoading(false);
                         }
-                        setTweetData(tweetData || {});
+                        setLoading(false);
+                        setTweetData(tweetData || false);
                     }}
                 >
                     fetch
                 </Button>
+                </div>
                 {loading && (
                     <div>
                         <Lottie
@@ -108,17 +112,15 @@ function App() {
                     </Alert>
                 )}
 
-                {tweetData.calculatedTweets &&
-                    tweetData.calculatedTweets.map((tweet) => {
-                        return (
+                {tweetData && (<Graph tweetData={tweetData} setTweetID={setTweetID}/>)}
+
+                {tweetID &&(
                             <Tweet
-                                key={tweet.id}
                                 onLoad={() => setLoading(false)}
                                 options={{ align: 'center' }}
-                                tweetId={tweet.id}
+                                tweetId={tweetID}
                             />
-                        );
-                    })}
+                        )}
             </Container>
         </div>
     );
