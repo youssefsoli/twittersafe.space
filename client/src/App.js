@@ -3,9 +3,9 @@ import {
     TextField,
     Container,
     InputAdornment,
-    Button
+    Button,
 } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab'
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { useState } from 'react';
 import { Tweet } from 'react-twitter-widgets';
 import Lottie from 'react-lottie';
@@ -15,8 +15,7 @@ const getTweets = async (username) => {
     return fetch(`http://localhost:3000/api/tweets/${username}`)
         .then((res) => res.json())
         .then((tweets) => {
-            if(tweets.err)
-                throw new Error(tweets.err);
+            if (tweets.err) throw new Error(tweets.err);
             return tweets;
         });
 };
@@ -54,14 +53,14 @@ function App() {
                                 try {
                                     tweetData = await getTweets(username);
                                     setError(false);
-                                } catch(e) {
+                                } catch (e) {
                                     setError(e);
                                     setLoading(false);
                                 }
                                 setTweetData(tweetData || {});
                                 ev.preventDefault();
                             }
-                          }}
+                        }}
                         onInput={({ target }) => {
                             setUsername(target.value);
                         }}
@@ -82,7 +81,7 @@ function App() {
                         try {
                             tweetData = await getTweets(username);
                             setError(false);
-                        } catch(e) {
+                        } catch (e) {
                             setError(e);
                             setLoading(false);
                         }
@@ -103,8 +102,8 @@ function App() {
 
                 {error && (
                     <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    {error.message}
+                        <AlertTitle>Error</AlertTitle>
+                        {error.message}
                     </Alert>
                 )}
 
