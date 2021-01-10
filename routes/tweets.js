@@ -20,7 +20,7 @@ const getTweets = async (username, client) => {
     const user = await client.get(`users/by/username/${username}`);
     const endpoint = `users/${user.data.id}/tweets`;
     const params = {
-        max_results: 10,
+        max_results: 100,
         exclude: 'retweets',
     };
 
