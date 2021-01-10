@@ -126,11 +126,10 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                         .strength(3)
                 )
                 .force('y', d3.forceY(150).strength(1))
-
                 .force(
                     'collide',
-                    d3.forceCollide((d) => {
-                        return size(d.magnitude);
+                    d3.forceCollide().radius((d) => {
+                        return size(Math.sqrt(d.magnitude));
                     })
                 )
                 .alphaDecay(0)
