@@ -55,6 +55,7 @@ const addSentiments = (tweetsData) => {
                 [classification] = await langClient.classifyText({document: doc});
             }
             return Promise.resolve({
+                id: tweet.id,
                 text: text,
                 product:
                     result.documentSentiment.score *
