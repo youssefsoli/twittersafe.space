@@ -13,16 +13,27 @@ export const useD3 = (renderChartFn, dependencies) => {
 
 const tick = () => {
     d3.selectAll('.circ')
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y);
+        .attr('cx', (d) => d.x)
+        .attr('cy', (d) => d.y);
 };
 
-const Graph = ({ tweetData, setTweetID }) => {
+const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
     const ref = useD3(
-        svg => {
+        (svg) => {
             let xScale = d3.scaleLinear().domain([-1, 1]).range([50, 950]);
-            let color = d3.scaleLinear().domain([-1, 0, 1]).range(["#cc3d3d","#ffffff","#60b157"]);
-            let size = d3.scaleLinear().domain([0, d3.max(tweetData.calculatedTweets, (d) => Math.sqrt(d.magnitude))]).range([1, 15]);
+            let color = d3
+                .scaleLinear()
+                .domain([-1, 0, 1])
+                .range(['#cc3d3d', '#ffffff', '#60b157']);
+            let size = d3
+                .scaleLinear()
+                .domain([
+                    0,
+                    d3.max(tweetData.calculatedTweets, (d) =>
+                        Math.sqrt(d.magnitude)
+                    ),
+                ])
+                .range([1, 15]);
 
             svg.selectAll('.circ')
                 .data(tweetData.calculatedTweets)
@@ -30,48 +41,53 @@ const Graph = ({ tweetData, setTweetID }) => {
                 .append('circle')
                 .attr('class', 'circ')
                 .attr('stroke', 'black')
-                .attr('fill', d => color(d.product))
-                .attr('r', d => size(Math.sqrt(d.magnitude)))
-                .attr('cx', d => xScale(d.score))
+                .attr('fill', (d) => color(d.product))
+                .attr('r', (d) => size(Math.sqrt(d.magnitude)))
+                .attr('cx', (d) => xScale(d.score))
                 .attr('cy', 150)
                 .on('click', (e, d) => {
                     setTweetID(d.id);
+                    setTweetLoading(true);
                 });
-            
+
             svg.append('line')
                 .attr('x1', 50)
                 .attr('x2', 950)
                 .attr('y1', 150)
                 .attr('y2', 150)
-                .attr('style', 'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;');
+                .attr(
+                    'style',
+                    'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;'
+                );
 
             let x_axis = d3.axisBottom().scale(xScale);
             svg.append('g').call(x_axis);
 
-            // let simulation = d3
-            //     .forceSimulation(tweetData.calculatedTweets)
-            //     .force(
-            //         'x',
-            //         d3.forceX(d => {
-            //                 return xScale(d.score);
-            //             })
-            //             .strength(0.2)
-            //     )
-            //     .force('y', d3.forceY(250).strength(0.2))
+            let simulation = d3
+                .forceSimulation(tweetData.calculatedTweets)
+                .force(
+                    'x',
+                    d3
+                        .forceX((d) => {
+                            return xScale(d.score);
+                        })
+                        .strength(5)
+                )
+                .force('y', d3.forceY(250).strength(0.3))
 
-            //     .force(
-            //         'collide',
-            //         d3.forceCollide(d => {
-            //             return size(d.magnitude);
-            //         })
-            //     )
+                .force(
+                    'collide',
+                    d3.forceCollide((d) => {
+                        return size(d.magnitude);
+                    })
+                )
+                .alphaDecay(0)
+                .alpha(0.3)
+                .on('tick', tick);
 
-            //     .alphaDecay(0)
-            //     .alpha(0.3)
-            //     .on('tick', tick);
-
-            // simulation.alphaDecay(0.1);
-        }, [tweetData.calculatedTweets[0].id]
+            simulation.alphaDecay(0.1);
+        },
+        [tweetData.calculatedTweets[0].id]
     );
 
     return (
