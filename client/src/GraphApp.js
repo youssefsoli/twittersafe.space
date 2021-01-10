@@ -3,9 +3,6 @@ import {
     TextField,
     Container,
     InputAdornment,
-    Button,
-    Paper,
-    InputBase,
     IconButton,
     Grid,
     Typography,
@@ -57,7 +54,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [tweetLoading, setTweetLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [tweetID, setTweetID] = useState(false);
+    const [tweetObj, setTweetObj] = useState(false);
     const classes = useStyles();
     const defaultOptions = {
         loop: true,
@@ -71,14 +68,14 @@ function App() {
     return (
         <div className="App">
             <Container justifyitems="center" alignitems="center">
-                <div>
+                {!tweetObj.id && (<div>
                     <img
                         src="logo.svg"
                         width="10%"
                         alt="logo"
                         className="logo"
                     />
-                </div>
+                </div>)}
                 <div>
                     <TextField
                         id="search"
@@ -87,7 +84,7 @@ function App() {
                         value={username}
                         onKeyPress={async (ev) => {
                             if (ev.key === 'Enter') {
-                                setTweetID(false);
+                                setTweetObj(false);
                                 setTweetData(false);
                                 setLoading(true);
                                 let tweetData = false;
@@ -118,7 +115,7 @@ function App() {
                                         className={classes.iconButton}
                                         aria-label="search"
                                         onClick={async () => {
-                                            setTweetID(false);
+                                            setTweetObj(false);
                                             setTweetData(false);
                                             setLoading(true);
                                             let tweetData = false;
@@ -191,7 +188,7 @@ function App() {
                         <Grid item xs={12}>
                             <Graph
                                 tweetData={tweetData}
-                                setTweetID={setTweetID}
+                                setTweetObj={setTweetObj}
                                 setTweetLoading={setTweetLoading}
                             />
                         </Grid>
@@ -208,12 +205,21 @@ function App() {
                     </div>
                 )}
 
-                {tweetID && (
-                    <Tweet
-                        onLoad={() => setTweetLoading(false)}
-                        options={{ align: 'center' }}
-                        tweetId={tweetID}
-                    />
+                {tweetObj.id && (
+                    <>
+                        <div>
+                            <Alert severity="info">
+                                This tweet has a sentiment score of {tweetObj.score.toFixed(2)}, a magnitude of {tweetObj.magnitude.toFixed(2)}, and a sentiment product of {tweetObj.product.toFixed(2)}
+                                </Alert>
+                        </div>
+                        <div>
+                        <Tweet
+                            onLoad={() => setTweetLoading(false)}
+                            options={{ align: 'center' }}
+                            tweetId={tweetObj.id}
+                        />
+                        </div>
+                    </>
                 )}
             </Container>
         </div>

@@ -17,7 +17,7 @@ const tick = () => {
         .attr('cy', (d) => d.y);
 };
 
-const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
+const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
     const ref = useD3(
         (svg) => {
             let xScale = d3.scaleLinear().domain([-1, 1]).range([50, 950]);
@@ -67,8 +67,8 @@ const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
                 .attr('cx', (d) => xScale(d.score))
                 .attr('cy', 150)
                 .on('click', (e, d) => {
-                    setTweetID(false);
-                    setTweetID(d.id);
+                    setTweetObj(false);
+                    setTweetObj(d);
                     setTweetLoading(true);
                 });
 
