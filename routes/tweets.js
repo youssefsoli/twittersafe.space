@@ -51,8 +51,10 @@ const addSentiments = (tweetsData) => {
             });
 
             let classification = false;
-            if(text.split(' ').length >= 20) {
-                [classification] = await langClient.classifyText({document: doc});
+            if (text.split(' ').length >= 20) {
+                [classification] = await langClient.classifyText({
+                    document: doc,
+                });
             }
             return Promise.resolve({
                 id: tweet.id,
@@ -62,7 +64,10 @@ const addSentiments = (tweetsData) => {
                     result.documentSentiment.magnitude,
                 score: result.documentSentiment.score,
                 magnitude: result.documentSentiment.magnitude,
-                category: classification && classification.categories.length ? classification.categories[0].name : ''
+                category:
+                    classification && classification.categories.length
+                        ? classification.categories[0].name
+                        : '',
             });
         })
     );
@@ -74,7 +79,9 @@ router.get('/:id', (req, res) => {
     getTweets(req.params.id, client)
         .then((tweets) => {
             addSentiments(tweets.data).then((calculatedTweets) => {
-                calculatedTweets = calculatedTweets.filter(tweet => tweet.score && tweet.magnitude); // Filter out tweets with no score or magnitude
+                calculatedTweets = calculatedTweets.filter(
+                    (tweet) => tweet.score && tweet.magnitude
+                ); // Filter out tweets with no score or magnitude
                 const averageScore =
                     calculatedTweets.reduce(
                         (acc, curr) => acc + curr.product,
