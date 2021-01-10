@@ -34,6 +34,7 @@ const sanitizeTweet = (text) => {
         .replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') // remove any urls
         .replace(/\n/g, ' ')
         .replace(/&amp;/g, '')
+        .replace(/@[A-Za-z0-9_]+/g, '')
         .replace(/\s\s+/g, ' ');
 };
 
@@ -50,9 +51,11 @@ const addSentiments = (tweetsData) => {
             });
             return Promise.resolve({
                 text: text,
-                score:
+                product:
                     result.documentSentiment.score *
                     result.documentSentiment.magnitude,
+                score: result.documentSentiment.score,
+                magnitude: result.documentSentiment.magnitude
             });
         })
     );
@@ -64,9 +67,10 @@ router.get('/:id', (req, res) => {
     getTweets(req.params.id, client)
         .then((tweets) => {
             addSentiments(tweets.data).then((calculatedTweets) => {
+                calculatedTweets = calculatedTweets.filter(tweet => tweet.score && tweet.magnitude); // Filter out tweets with no score or magnitude
                 const averageScore =
                     calculatedTweets.reduce(
-                        (acc, curr) => acc + curr.score,
+                        (acc, curr) => acc + curr.product,
                         0
                     ) / calculatedTweets.length;
                 res.send({ calculatedTweets, averageScore });
