@@ -53,7 +53,14 @@ const useStyles = makeStyles((theme) => ({
 const GrayTypography = withStyles({
     root: {
         color: '#d4d4d4',
-        padding: 5,
+        'padding-top': 5,
+    },
+})(Typography);
+
+const BlueTypography = withStyles({
+    root: {
+        color: '#1ca4f4',
+        'padding-top': 30,
     },
 })(Typography);
 
@@ -269,19 +276,35 @@ function App() {
                                         <Grid item xs={12}>
                                             <GrayTypography
                                                 align="center"
-                                                variant="h3"
+                                                variant="h4"
                                             >
                                                 Score
                                             </GrayTypography>
                                         </Grid>
-                                        <Grid item xs={12}>
-                                            <GrayTypography
-                                                align="center"
-                                                variant="h3"
-                                            >
-                                                Score
-                                            </GrayTypography>
-                                        </Grid>
+                                        {tweetObj.category.length > 0 && (
+                                            <>
+                                                <Grid item xs={12}>
+                                                    <BlueTypography
+                                                        align="center"
+                                                        variant="h3"
+                                                    >
+                                                        {
+                                                            tweetObj.category
+                                                                .substr(1)
+                                                                .split('/')[0]
+                                                        }
+                                                    </BlueTypography>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <GrayTypography
+                                                        align="center"
+                                                        variant="h4"
+                                                    >
+                                                        Category
+                                                    </GrayTypography>
+                                                </Grid>
+                                            </>
+                                        )}
                                     </Grid>
                                 </Grid>
                             )}
