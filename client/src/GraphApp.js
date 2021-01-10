@@ -6,6 +6,7 @@ import {
     IconButton,
     Grid,
     Typography,
+    Tooltip,
 } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
@@ -13,6 +14,7 @@ import SentimentVerySatisfiedSharpIcon from '@material-ui/icons/SentimentVerySat
 import SentimentDissatisfiedSharpIcon from '@material-ui/icons/SentimentDissatisfiedSharp';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { green, red } from '@material-ui/core/colors';
+import InfoIcon from '@material-ui/icons/Info';
 import { useState } from 'react';
 import { Tweet } from 'react-twitter-widgets';
 import Lottie from 'react-lottie';
@@ -22,7 +24,11 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const getTweets = async (username) => {
-    return fetch(`http://localhost:3000/api/tweets/${username}`)
+    const host =
+        process.env.NODE_ENV === 'production'
+            ? 'https://twittersafe.space'
+            : 'http://localhost:3000';
+    return fetch(`${host}/api/tweets/${username}`)
         .then((res) => res.json())
         .then((tweets) => {
             if (tweets.err) throw new Error(tweets.err);
@@ -61,6 +67,12 @@ const BlueTypography = withStyles({
     root: {
         color: '#1ca4f4',
         'padding-top': 30,
+    },
+})(Typography);
+
+const PTypography = withStyles({
+    root: {
+        'padding-right': 2,
     },
 })(Typography);
 
@@ -192,9 +204,17 @@ function App() {
                                 </Typography>
                             </Grid>
                             <Grid item xs={4}>
-                                <Typography align="center">
+                                <PTypography align="center">
                                     Tweet Sentiments
-                                </Typography>
+                                    <Tooltip
+                                        title="Sentiments indicate the overall mood of the tweet"
+                                        placement="right"
+                                    >
+                                        <IconButton aria-label="info">
+                                            <InfoIcon fontSize="small" />
+                                        </IconButton>
+                                    </Tooltip>
+                                </PTypography>
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography align="right">
