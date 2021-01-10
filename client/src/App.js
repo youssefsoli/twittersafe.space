@@ -11,7 +11,7 @@ import Lottie from 'react-lottie';
 import animationData from './lotties/loading.json';
 
 const getTweets = async (username) => {
-    return fetch(`http://localhost:3000/api/tweets/${username}`)
+    return fetch(`/api/tweets/${username}`)
         .then((res) => res.json())
         .then((tweets) => tweets);
 };
@@ -72,7 +72,7 @@ function App() {
                     </div>
                 )}
 
-                {tweets.length &&
+                {tweets &&
                     tweets.map((tweet) => {
                         return (
                             <Tweet
