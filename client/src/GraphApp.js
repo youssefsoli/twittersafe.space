@@ -12,7 +12,10 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import SentimentVerySatisfiedSharpIcon from '@material-ui/icons/SentimentVerySatisfiedSharp';
+import SentimentDissatisfiedSharpIcon from '@material-ui/icons/SentimentDissatisfiedSharp';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { green, red } from '@material-ui/core/colors';
 import { useState } from 'react';
 import { Tweet } from 'react-twitter-widgets';
 import Lottie from 'react-lottie';
@@ -162,16 +165,28 @@ function App() {
                         direction="row"
                         justify="space-evenly"
                         alignItems="flex-start"
-                        spacing={3}
+                        spacing={2}
                     >
                         <Grid item xs={2}>
-                            <Typography align="left">Negative</Typography>
+                            <Typography align="left">
+                                <SentimentDissatisfiedSharpIcon
+                                    fontSize="large"
+                                    style={{ color: red[500] }}
+                                ></SentimentDissatisfiedSharpIcon>
+                            </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography align="center">Neutral</Typography>
+                            <Typography align="center">
+                                Tweet Sentiments
+                            </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography align="right">Positive</Typography>
+                            <Typography align="right">
+                                <SentimentVerySatisfiedSharpIcon
+                                    fontSize="large"
+                                    style={{ color: green[500] }}
+                                ></SentimentVerySatisfiedSharpIcon>
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Graph
