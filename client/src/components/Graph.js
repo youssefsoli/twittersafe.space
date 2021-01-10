@@ -35,20 +35,6 @@ const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
                 ])
                 .range([1, 15]);
 
-            svg.selectAll('.circ')
-                .data(tweetData.calculatedTweets)
-                .enter()
-                .append('circle')
-                .attr('class', 'circ')
-                .attr('stroke', 'black')
-                .attr('fill', (d) => color(d.product))
-                .attr('r', (d) => size(Math.sqrt(d.magnitude)))
-                .attr('cx', (d) => xScale(d.score))
-                .attr('cy', 150)
-                .on('click', (e, d) => {
-                    setTweetID(d.id);
-                    setTweetLoading(true);
-                });
 
             svg.append('line')
                 .attr('x1', 50)
@@ -60,8 +46,34 @@ const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
                     'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;'
                 );
 
+            svg.append('line')
+                .attr('x1', 500)
+                .attr('x2', 500)
+                .attr('y1', 0)
+                .attr('y2', 300)
+                .attr(
+                    'style',
+                    'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;'
+                );
+
+            svg.selectAll('.circ')
+                .data(tweetData.calculatedTweets)
+                .enter()
+                .append('circle')
+                .attr('class', 'circ')
+                .attr('stroke', 'black')
+                .attr('fill', (d) => color(d.product))
+                .attr('r', (d) => size(Math.sqrt(d.magnitude)))
+                .attr('cx', (d) => xScale(d.score))
+                .attr('cy', 150)
+                .on('click', (e, d) => {
+                    setTweetID(false);
+                    setTweetID(d.id);
+                    setTweetLoading(true);
+                });
+
             let x_axis = d3.axisBottom().scale(xScale);
-            svg.append('g').call(x_axis);
+            svg.select('.x-axis').call(x_axis);
 
             let simulation = d3
                 .forceSimulation(tweetData.calculatedTweets)
@@ -73,7 +85,7 @@ const Graph = ({ tweetData, setTweetID, setTweetLoading }) => {
                         })
                         .strength(5)
                 )
-                .force('y', d3.forceY(250).strength(0.3))
+                .force('y', d3.forceY(150).strength(1))
 
                 .force(
                     'collide',
