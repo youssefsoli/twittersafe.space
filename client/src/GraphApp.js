@@ -296,7 +296,7 @@ function App() {
                                         <Grid item xs={12}>
                                             <GrayTypography
                                                 align="center"
-                                                variant="h4"
+                                                variant="h5"
                                             >
                                                 Score
                                             </GrayTypography>
