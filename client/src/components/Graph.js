@@ -35,7 +35,6 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                 ])
                 .range([1, 13]);
 
-
             svg.append('line')
                 .attr('x1', 50)
                 .attr('x2', 950)
@@ -56,40 +55,43 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                     'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;'
                 );
 
-            const legend = svg.append('g').attr("transform", "translate(100, 265)");
+            const legend = svg
+                .append('g')
+                .attr('transform', 'translate(100, 265)');
             const sizes = [5, 7, 9, 11, 13];
-            legend.selectAll("circle")
-                    .data(sizes)
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function(d,i) { return d3.sum(sizes.slice(0,i+1)) * 2.5; })
-                    .attr("r", function(d) { return d })
-                    .attr('stroke', 'rgba(0, 0, 0, 0.5)')
-                    .attr('fill', '#ffffff');
-            
+            legend
+                .selectAll('circle')
+                .data(sizes)
+                .enter()
+                .append('circle')
+                .attr('cx', function (d, i) {
+                    return d3.sum(sizes.slice(0, i + 1)) * 2.5;
+                })
+                .attr('r', function (d) {
+                    return d;
+                })
+                .attr('stroke', 'rgba(0, 0, 0, 0.5)')
+                .attr('fill', '#ffffff');
+
             svg.append('text')
                 .attr('y', 295)
                 .attr('x', 160)
                 .text('Magnitude')
                 .attr('fill', 'rgba(0, 0, 0, 0.5)')
-                .attr("text-anchor", "middle")
+                .attr('text-anchor', 'middle');
 
             svg.append('line')
                 .attr('x1', xScale(tweetData.averageScore))
                 .attr('x2', xScale(tweetData.averageScore))
                 .attr('y1', 0)
                 .attr('y2', 280)
-                .attr(
-                    'style',
-                    'stroke: black; stroke-width: 2px;'
-                );
+                .attr('style', 'stroke: black; stroke-width: 2px;');
 
-            
             svg.append('text')
                 .attr('y', 295)
                 .attr('x', xScale(tweetData.averageScore))
                 .text('Average Sentiment')
-                .attr("text-anchor", "middle")
+                .attr('text-anchor', 'middle');
 
             svg.selectAll('.circ')
                 .data(tweetData.calculatedTweets)
@@ -106,10 +108,10 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                     setTweetObj(d);
                     setTweetLoading(true);
                 })
-                .on('mouseover', function() {
+                .on('mouseover', function () {
                     d3.select(this).classed('active', true);
                 })
-                .on('mouseout', function() {
+                .on('mouseout', function () {
                     d3.select(this).classed('active', false);
                 });
 
@@ -120,7 +122,8 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                 .forceSimulation(tweetData.calculatedTweets)
                 .force(
                     'x',
-                    d3.forceX((d) => {
+                    d3
+                        .forceX((d) => {
                             return xScale(d.score);
                         })
                         .strength(3)

@@ -306,7 +306,7 @@ function App() {
                                                 <Grid item xs={12}>
                                                     <BlueTypography
                                                         align="center"
-                                                        variant="h3"
+                                                        variant="h4"
                                                     >
                                                         {
                                                             tweetObj.category
@@ -318,7 +318,7 @@ function App() {
                                                 <Grid item xs={12}>
                                                     <GrayTypography
                                                         align="center"
-                                                        variant="h4"
+                                                        variant="h5"
                                                     >
                                                         Category
                                                     </GrayTypography>
