@@ -20,7 +20,7 @@ const getTweets = async (username, client) => {
     const user = await client.get(`users/by/username/${username}`);
     const endpoint = `users/${user.data.id}/tweets`;
     const params = {
-        max_results: 100,
+        max_results: 10,
         exclude: 'retweets',
     };
 
@@ -49,13 +49,19 @@ const addSentiments = (tweetsData) => {
             const [result] = await langClient.analyzeSentiment({
                 document: doc,
             });
+
+            let classification = false;
+            if(text.split(' ').length >= 20) {
+                [classification] = await langClient.classifyText({document: doc});
+            }
             return Promise.resolve({
                 text: text,
                 product:
                     result.documentSentiment.score *
                     result.documentSentiment.magnitude,
                 score: result.documentSentiment.score,
-                magnitude: result.documentSentiment.magnitude
+                magnitude: result.documentSentiment.magnitude,
+                category: classification && classification.categories.length ? classification.categories[0].name : ''
             });
         })
     );
