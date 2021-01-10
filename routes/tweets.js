@@ -84,7 +84,7 @@ router.get('/:id', (req, res) => {
                 ); // Filter out tweets with no score or magnitude
                 const averageScore =
                     calculatedTweets.reduce(
-                        (acc, curr) => acc + curr.product,
+                        (acc, curr) => acc + curr.score,
                         0
                     ) / calculatedTweets.length;
                 res.send({ calculatedTweets, averageScore });

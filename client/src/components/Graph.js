@@ -50,11 +50,28 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                 .attr('x1', 500)
                 .attr('x2', 500)
                 .attr('y1', 0)
-                .attr('y2', 300)
+                .attr('y2', 280)
                 .attr(
                     'style',
                     'stroke: rgba(222, 222, 230, 0.9); stroke-width: 1px;'
                 );
+
+            svg.append('line')
+                .attr('x1', xScale(tweetData.averageScore))
+                .attr('x2', xScale(tweetData.averageScore))
+                .attr('y1', 0)
+                .attr('y2', 280)
+                .attr(
+                    'style',
+                    'stroke: black; stroke-width: 2px;'
+                );
+
+            
+            svg.append('text')
+                .attr('y', 295)
+                .attr('x', xScale(tweetData.averageScore))
+                .text('Average Sentiment')
+                .attr("text-anchor", "middle")
 
             svg.selectAll('.circ')
                 .data(tweetData.calculatedTweets)
