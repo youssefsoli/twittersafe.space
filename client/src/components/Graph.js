@@ -70,6 +70,12 @@ const Graph = ({ tweetData, setTweetObj, setTweetLoading }) => {
                     setTweetObj(false);
                     setTweetObj(d);
                     setTweetLoading(true);
+                })
+                .on('mouseover', function() {
+                    d3.select(this).classed('active', true);
+                })
+                .on('mouseout', function() {
+                    d3.select(this).classed('active', false);
                 });
 
             let x_axis = d3.axisBottom().scale(xScale);
