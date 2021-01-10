@@ -7,7 +7,7 @@ import {
     Grid,
     Typography,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import SentimentVerySatisfiedSharpIcon from '@material-ui/icons/SentimentVerySatisfiedSharp';
 import SentimentDissatisfiedSharpIcon from '@material-ui/icons/SentimentDissatisfiedSharp';
@@ -18,6 +18,8 @@ import { Tweet } from 'react-twitter-widgets';
 import Lottie from 'react-lottie';
 import animationData from './lotties/loading.json';
 import Graph from './components/Graph';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const getTweets = async (username) => {
     return fetch(`http://localhost:3000/api/tweets/${username}`)
@@ -48,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const GrayTypography = withStyles({
+    root: {
+        color: '#d4d4d4',
+        padding: 5,
+    },
+})(Typography);
+
 function App() {
     const [username, setUsername] = useState('');
     const [tweetData, setTweetData] = useState(false);
@@ -68,14 +77,16 @@ function App() {
     return (
         <div className="App">
             <Container justifyitems="center" alignitems="center">
-                {!tweetObj.id && (<div>
-                    <img
-                        src="logo.svg"
-                        width="10%"
-                        alt="logo"
-                        className="logo"
-                    />
-                </div>)}
+                {!tweetObj.id && (
+                    <div>
+                        <img
+                            src="logo.svg"
+                            width="10%"
+                            alt="logo"
+                            className="logo"
+                        />
+                    </div>
+                )}
                 <div>
                     <TextField
                         id="search"
@@ -157,42 +168,44 @@ function App() {
                 )}
 
                 {tweetData && (
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-evenly"
-                        alignItems="flex-start"
-                        spacing={2}
-                    >
-                        <Grid item xs={2}>
-                            <Typography align="left">
-                                <SentimentDissatisfiedSharpIcon
-                                    fontSize="large"
-                                    style={{ color: red[500] }}
-                                ></SentimentDissatisfiedSharpIcon>
-                            </Typography>
+                    <div style={{ maxWidth: '1000px', margin: 'auto' }}>
+                        <Grid
+                            container
+                            direction="row"
+                            // justify="space-between"
+                            alignItems="flex-start"
+                            spacing={2}
+                        >
+                            <Grid item xs={4}>
+                                <Typography align="left">
+                                    <SentimentDissatisfiedSharpIcon
+                                        fontSize="large"
+                                        style={{ color: red[500] }}
+                                    ></SentimentDissatisfiedSharpIcon>
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Typography align="center">
+                                    Tweet Sentiments
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Typography align="right">
+                                    <SentimentVerySatisfiedSharpIcon
+                                        fontSize="large"
+                                        style={{ color: green[500] }}
+                                    ></SentimentVerySatisfiedSharpIcon>
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Graph
+                                    tweetData={tweetData}
+                                    setTweetObj={setTweetObj}
+                                    setTweetLoading={setTweetLoading}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={2}>
-                            <Typography align="center">
-                                Tweet Sentiments
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Typography align="right">
-                                <SentimentVerySatisfiedSharpIcon
-                                    fontSize="large"
-                                    style={{ color: green[500] }}
-                                ></SentimentVerySatisfiedSharpIcon>
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Graph
-                                tweetData={tweetData}
-                                setTweetObj={setTweetObj}
-                                setTweetLoading={setTweetLoading}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 )}
 
                 {tweetLoading && (
@@ -206,20 +219,83 @@ function App() {
                 )}
 
                 {tweetObj.id && (
-                    <>
-                        <div>
-                            <Alert severity="info">
-                                This tweet has a sentiment score of {tweetObj.score.toFixed(2)}, a magnitude of {tweetObj.magnitude.toFixed(2)}, and a sentiment product of {tweetObj.product.toFixed(2)}
-                                </Alert>
-                        </div>
-                        <div>
-                        <Tweet
-                            onLoad={() => setTweetLoading(false)}
-                            options={{ align: 'center' }}
-                            tweetId={tweetObj.id}
-                        />
-                        </div>
-                    </>
+                    <div style={{ maxWidth: '1000px', margin: 'auto' }}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-evenly"
+                            alignItems="flex-start"
+                            spacing={2}
+                        >
+                            {!tweetLoading && (
+                                <Grid item xs={4}>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <Typography align="center">
+                                                <CircularProgressbar
+                                                    value={
+                                                        tweetObj.score < 0
+                                                            ? tweetObj.score *
+                                                              -1
+                                                            : tweetObj.score
+                                                    }
+                                                    text={`${Math.round(
+                                                        tweetObj.score * 100
+                                                    )}%`}
+                                                    minValue={0}
+                                                    maxValue={1}
+                                                    counterClockwise={
+                                                        tweetObj.score < 0
+                                                    }
+                                                    styles={{
+                                                        path: {
+                                                            stroke:
+                                                                tweetObj.score <
+                                                                0
+                                                                    ? red[500]
+                                                                    : green[500],
+                                                        },
+                                                        text: {
+                                                            fill:
+                                                                tweetObj.score <
+                                                                0
+                                                                    ? red[500]
+                                                                    : green[500],
+                                                        },
+                                                    }}
+                                                />
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <GrayTypography
+                                                align="center"
+                                                variant="h3"
+                                            >
+                                                Score
+                                            </GrayTypography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <GrayTypography
+                                                align="center"
+                                                variant="h3"
+                                            >
+                                                Score
+                                            </GrayTypography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            )}
+                            <Grid item xs={8}>
+                                <Typography align="right">
+                                    <Tweet
+                                        onLoad={() => setTweetLoading(false)}
+                                        options={{ align: 'center' }}
+                                        tweetId={tweetObj.id}
+                                    />
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </div>
                 )}
             </Container>
         </div>
