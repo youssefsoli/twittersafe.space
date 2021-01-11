@@ -76,29 +76,31 @@ const addSentiments = (tweetsData) => {
 router.get('/:id', (req, res) => {
     const client = getTwitterClient();
     // TODO: account for more than 800 tweets
-    getTweets(req.params.id, client)
-        .then((tweets) => {
-            addSentiments(tweets.data).then((calculatedTweets) => {
-                calculatedTweets = calculatedTweets.filter(
-                    (tweet) => tweet.score && tweet.magnitude
-                ); // Filter out tweets with no score or magnitude
-                const averageScore =
-                    calculatedTweets.reduce(
-                        (acc, curr) => acc + curr.score,
-                        0
-                    ) / calculatedTweets.length;
-                res.send({ calculatedTweets, averageScore });
-            }).catch(err => {
-                console.log(err);
-                res.status(500);
-                res.send({err: 'Invalid language'});
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500);
-            res.send({err: 'Invalid username'});
-        });
+    // getTweets(req.params.id, client)
+    //     .then((tweets) => {
+    //         addSentiments(tweets.data).then((calculatedTweets) => {
+    //             calculatedTweets = calculatedTweets.filter(
+    //                 (tweet) => tweet.score && tweet.magnitude
+    //             ); // Filter out tweets with no score or magnitude
+    //             const averageScore =
+    //                 calculatedTweets.reduce(
+    //                     (acc, curr) => acc + curr.score,
+    //                     0
+    //                 ) / calculatedTweets.length;
+    //             res.send(finalObj);
+    //         }).catch(err => {
+    //             console.log(err);
+    //             res.status(500);
+    //             res.send({err: 'Invalid language'});
+    //         });
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //         res.status(500);
+    //         res.send({err: 'Invalid username'});
+    //     });
+
+    res.send(require('../barackobama.json'));
 });
 
 router.get('/', (req, res) => {
